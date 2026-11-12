@@ -49,3 +49,15 @@ $kategori = match(true) {
 };
 
 echo $kategori .PHP_EOL;
+
+// Exercise
+
+$input = (int) trim(readline("Masukkan angka: "));
+
+$res = match(true){
+    $input == 0 => "Bilangan Nol",
+    $input > 0 => "Bilangan Positif",
+    $input < 0 => "Bilangna Negatif",
+};
+
+echo "$input adalah " . $res . PHP_EOL;
