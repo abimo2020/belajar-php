@@ -75,3 +75,4 @@ var_dump($newTodo);
 $doneTodo = array_filter($todos,fn($value) =>$value["is_done"] );
 var_dump($doneTodo);
 echo count($doneTodo) . PHP_EOL;
+print_r($doneTodo);
