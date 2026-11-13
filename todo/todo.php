@@ -1,5 +1,27 @@
 <?php
 
+const FILE_TODO = __DIR__ . "/data/todos.json";
+
+function muatTodo(string $path):array{
+    if (!file_exists($path)){
+        return [];
+    }
+    $content = file_get_contents($path);
+    if ($content === "") {
+        return [];
+    }    
+    return json_decode($content,true)??[];
+}
+
+function simpanTodo(string $path, array $todos):void{
+    $folder = dirname($path);
+    if (!is_dir($folder)){
+        mkdir($folder,0755,true);
+    }
+    $json = json_encode($todos, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    file_put_contents($path,$json);
+}
+
 function tampilkanMenu(): void {
     echo PHP_EOL . "=== TODO LIST ===" . PHP_EOL;
     echo "1. Lihat Todo" . PHP_EOL;
@@ -8,6 +30,10 @@ function tampilkanMenu(): void {
 }
 
 function tambahTodo(array $todos,string $title): array {
+    if (strlen($title) > 50) {
+        echo "Title tidak boleh lebih dari 50 karakter." . PHP_EOL;
+        return $todos;
+    }
     $id = count($todos) + 1;
     $todos[] = ["id" => $id, "title" => $title, "mark_done" => false];
     return $todos;
@@ -25,7 +51,7 @@ function lihatTodo(array $todos): void {
     }
 }
 
-$todos = [];
+$todos = muatTodo(FILE_TODO);
 
 while(true){
     tampilkanMenu();
@@ -43,6 +69,7 @@ while(true){
                 break;
             }
             $todos = tambahTodo($todos,$judul);
+            simpanTodo(FILE_TODO,$todos);
             echo "Todo telah ditambahkan." . PHP_EOL;
             break;
         case '0':
