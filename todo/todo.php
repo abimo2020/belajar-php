@@ -26,6 +26,7 @@ function tampilkanMenu(): void {
     echo PHP_EOL . "=== TODO LIST ===" . PHP_EOL;
     echo "1. Lihat Todo" . PHP_EOL;
     echo "2. Tambah Todo" . PHP_EOL;
+    echo "3. Hapus Todo" . PHP_EOL;
     echo "0. Keluar" . PHP_EOL;
 }
 
@@ -51,6 +52,14 @@ function lihatTodo(array $todos): void {
     }
 }
 
+function hapusTodo(array $todos, int $id): array {
+    $index = array_search($id, array_column($todos,"id"),true);
+    var_dump($index);
+    unset($todos[$index]);
+    echo "Todo:$id berhasil dihapus." . PHP_EOL;
+    return array_values($todos);
+}
+
 $todos = muatTodo(FILE_TODO);
 
 while(true){
@@ -71,6 +80,11 @@ while(true){
             $todos = tambahTodo($todos,$judul);
             simpanTodo(FILE_TODO,$todos);
             echo "Todo telah ditambahkan." . PHP_EOL;
+            break;
+        case '3':
+            $id = (int) trim(readline("Masukkan id: "));
+            $todos = hapusTodo($todos,$id);
+            simpanTodo(FILE_TODO,$todos);
             break;
         case '0':
             echo "Sampai jumpa!" . PHP_EOL;
