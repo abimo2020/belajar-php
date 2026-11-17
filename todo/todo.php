@@ -35,7 +35,7 @@ function tambahTodo(array $todos,string $title): array {
         echo "Title tidak boleh lebih dari 50 karakter." . PHP_EOL;
         return $todos;
     }
-    $id = count($todos) + 1;
+    $id = generateId($todos);
     $todos[] = ["id" => $id, "title" => $title, "mark_done" => false];
     return $todos;
 }
@@ -54,11 +54,21 @@ function lihatTodo(array $todos): void {
 
 function hapusTodo(array $todos, int $id): array {
     $index = array_search($id, array_column($todos,"id"),true);
-    var_dump($index);
+    if ($index === false) {
+        return $todos;
+    }
     unset($todos[$index]);
-    echo "Todo:$id berhasil dihapus." . PHP_EOL;
     return array_values($todos);
 }
+
+function generateId(array $todos): int {
+    if (count($todos) === 0) {
+        return 1;
+    }
+    return max(array_column($todos,"id"))+1;
+}
+
+
 
 $todos = muatTodo(FILE_TODO);
 
@@ -83,8 +93,16 @@ while(true){
             break;
         case '3':
             $id = (int) trim(readline("Masukkan id: "));
+            $jumlahTodo = count($todos);
             $todos = hapusTodo($todos,$id);
+            
+            if($jumlahTodo == count($todos)){
+                echo "Todo dengan id $id tidak ditemukan.";
+                break;
+            }
+
             simpanTodo(FILE_TODO,$todos);
+            echo "Todo:$id berhasil dihapus." . PHP_EOL;
             break;
         case '0':
             echo "Sampai jumpa!" . PHP_EOL;
