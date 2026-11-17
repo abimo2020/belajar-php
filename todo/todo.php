@@ -51,6 +51,10 @@ function lihatTodo(array $todos): void {
         $mark = $todo["mark_done"]?"[x]":"[ ]";
         echo "{$todo["id"]}. $mark {$todo["title"]}" . PHP_EOL;
     }
+    $doneTodo = count(array_filter($todos,fn($value) => $value["mark_done"] ));
+    $totalTodo = count($todos);
+    echo "$doneTodo dari $totalTodo telah selesai." . PHP_EOL;
+
 }
 
 function hapusTodo(array $todos, int $id): array {
@@ -116,7 +120,7 @@ while(true){
             break;
 
         case '4':
-            $id = (int) trim(readline("Masukkan id:"));
+            $id = (int) trim(readline("Masukkan id: "));
             $todos = tandaiSelesai($todos,$id);
             simpanTodo(FILE_TODO,$todos);
             echo "Todo dengan id $id ditandai selesai.";
