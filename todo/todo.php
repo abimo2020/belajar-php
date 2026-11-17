@@ -27,6 +27,7 @@ function tampilkanMenu(): void {
     echo "1. Lihat Todo" . PHP_EOL;
     echo "2. Tambah Todo" . PHP_EOL;
     echo "3. Hapus Todo" . PHP_EOL;
+    echo "4. Tandai Selesai Todo" . PHP_EOL;
     echo "0. Keluar" . PHP_EOL;
 }
 
@@ -68,7 +69,16 @@ function generateId(array $todos): int {
     return max(array_column($todos,"id"))+1;
 }
 
+function tandaiSelesai(array $todos, int $id): array {
+    $index = array_search($id, array_column($todos,"id"),true);
 
+    if ($index === false){
+        echo "Todo:$id tidak ditemukan". PHP_EOL;
+        return $todos;
+    }
+    $todos[$index]["mark_done"] = true;
+    return $todos;
+}
 
 $todos = muatTodo(FILE_TODO);
 
@@ -103,6 +113,13 @@ while(true){
 
             simpanTodo(FILE_TODO,$todos);
             echo "Todo:$id berhasil dihapus." . PHP_EOL;
+            break;
+
+        case '4':
+            $id = (int) trim(readline("Masukkan id:"));
+            $todos = tandaiSelesai($todos,$id);
+            simpanTodo(FILE_TODO,$todos);
+            echo "Todo dengan id $id ditandai selesai.";
             break;
         case '0':
             echo "Sampai jumpa!" . PHP_EOL;
